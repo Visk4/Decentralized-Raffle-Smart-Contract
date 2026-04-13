@@ -1,66 +1,104 @@
-## Foundry
+🎟️ Decentralized Raffle Smart Contract
 
-**Foundry is a blazing fast, portable and modular toolkit for Ethereum application development written in Rust.**
+A secure, automated, and provably fair lottery system built with Solidity and the Foundry development framework. This project utilizes Chainlink VRF for decentralized randomness and Chainlink Automation for trustless execution.
 
-Foundry consists of:
+🌟 Key Features
 
--   **Forge**: Ethereum testing framework (like Truffle, Hardhat and DappTools).
--   **Cast**: Swiss army knife for interacting with EVM smart contracts, sending transactions and getting chain data.
--   **Anvil**: Local Ethereum node, akin to Ganache, Hardhat Network.
--   **Chisel**: Fast, utilitarian, and verbose solidity REPL.
+Provably Fair: Uses Chainlink VRF (Verifiable Random Function) v2.5 to ensure winner selection is tamper-proof and verifiable on-chain.
 
-## Documentation
+Fully Automated: Integrated with Chainlink Automation to trigger raffle draws based on time intervals without manual intervention.
 
-https://book.getfoundry.sh/
+Gas Optimized: Uses custom errors instead of strings to save gas and efficient state management patterns.
 
-## Usage
+Robust Testing: Comprehensive test suite including unit tests, integration tests, and forked-network testing.
 
-### Build
+Dynamic Configuration: Easily deployable across different networks (Sepolia, Mainnet, etc.) using automated scripts.
 
-```shell
-$ forge build
-```
+🛠️ Tech Stack
 
-### Test
+Smart Contract Language: Solidity 0.8.19+
 
-```shell
-$ forge test
-```
+Development Framework: Foundry
 
-### Format
+Oracles: Chainlink VRF & Chainlink Automation
 
-```shell
-$ forge fmt
-```
+📋 Prerequisites
 
-### Gas Snapshots
+Ensure you have the following installed:
 
-```shell
-$ forge snapshot
-```
+Git
 
-### Anvil
+Foundry
 
-```shell
-$ anvil
-```
+🔧 Installation & Setup
 
-### Deploy
+Clone the repository:
 
-```shell
-$ forge script script/Counter.s.sol:CounterScript --rpc-url <your_rpc_url> --private-key <your_private_key>
-```
+git clone [https://github.com/Visk4/Decentralized-Raffle-Smart-Contract.git](https://github.com/Visk4/Decentralized-Raffle-Smart-Contract.git)
+cd Decentralized-Raffle-Smart-Contract
 
-### Cast
 
-```shell
-$ cast <subcommand>
-```
+Install dependencies:
 
-### Help
+forge install
 
-```shell
-$ forge --help
-$ anvil --help
-$ cast --help
-```
+
+Build the project:
+
+forge build
+
+
+🧪 Testing
+
+Run the full test suite to ensure everything is working correctly:
+
+# Run all tests
+forge test
+
+# Run tests with high verbosity (useful for debugging)
+forge test -vvv
+
+# Check test coverage
+forge coverage
+
+
+🚀 Deployment
+
+1. Configure Environment
+
+Create a .env file in the root directory:
+
+PRIVATE_KEY=your_private_key
+SEPOLIA_RPC_URL=your_rpc_url
+ETHERSCAN_API_KEY=your_etherscan_api_key
+
+
+2. Deploy to Sepolia Testnet
+
+source .env
+forge script script/DeployRaffle.s.sol:DeployRaffle --rpc-url $SEPOLIA_RPC_URL --broadcast --verify -vvvv
+
+
+📖 How It Works
+
+Entrance: Users participate by calling enterRaffle and paying the entranceFee.
+
+Maintenance: Chainlink Automation periodically calls checkUpkeep to see if the raffle is ready (interval passed, has players, has ETH).
+
+Trigger: If checkUpkeep returns true, performUpkeep is executed, which requests a random number from Chainlink VRF.
+
+Resolution: Chainlink VRF returns the randomness via fulfillRandomWords. The contract picks a winner using a modulo operation, transfers the prize pool, and resets for the next round.
+
+📁 Project Structure
+
+.
+├── src/                # Smart Contract source files
+├── script/             # Deployment and interaction scripts
+├── test/               # Unit and integration tests
+├── lib/                # External libraries (Chainlink, Forge-std)
+└── foundry.toml        # Foundry configuration
+
+
+📄 License
+
+This project is licensed under the MIT License.
